@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VUE PRATIQUE : Editeur Markdown</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "vue": "https://unpkg.com/vue@3.5.4/dist/vue.esm-browser.js",
+        "vue/server-renderer": "https://cdn.jsdelivr.net/npm/@vue/server-renderer@3.5.4/dist/server-renderer.esm-browser.js",
+        "marked": "https://cdn.jsdelivr.net/npm/marked/+esm",
+        "lodash-es": "https://cdn.jsdelivr.net/npm/lodash-es/+esm"
+      },
+      "scopes": {}
+    }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <div class="editor">
+      <textarea class="input" :value="input" @input="update"></textarea>
+      <div class="output" v-html="output"></div>
+    </div>
+  </div>
+  
+  <script type="module">
+    import { createApp, ref, computed } from 'vue'
+    import { marked } from 'marked'
+    import { debounce } from 'lodash-es'
+
+    createApp({
+
+      setup() {
+
+        const input = ref('# hello')
+        const output = computed(() => marked(input.value))
+        const update = debounce((e) => {
+          input.value = e.target.value
+        }, 100)
+
+        return {
+          input,
+          output,
+          update
+        }
+
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>
